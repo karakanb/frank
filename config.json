@@ -1,0 +1,13 @@
+{
+	"placeholder": {
+		"content": "$$CONTENT$$",
+		"title": "$$TITLE$$",
+		"author": "$$AUTHOR$$",
+		"description": "$$DESCRIPTION$$"
+	},
+	"default": {
+		"title": "Docs",
+		"description": "Documentation of an awesome project.",
+		"author": "Project Author"
+	}
+}

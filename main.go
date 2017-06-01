@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"encoding/json"
 	"bytes"
     "io/ioutil"
     "io"
@@ -11,38 +12,41 @@ import (
 	"flag"
 )
 
-// Reading files requires checking most calls for errors.
-// This helper will streamline our error checks below.
-func check(e error) {
-    if e != nil {
-        panic(e)
-    }
+type DefaultValues struct {
+	Title string
+	Description string
+	Author string
 }
 
-// pp prints the given string, built to make code more readable.
-func pp(s string) {
-	fmt.Println(s)
+type Placeholders struct {
+	Content string
+	Title string
+	Author string
+	Description string
+}
+
+type Config struct {
+	Placeholder Placeholders
+	Default DefaultValues
 }
 
 func main() {
 
-	// Config placeholders.
-	templatePlaceholder := []byte("$$CONTENT$$")
-	titlePlaceholder := []byte("$$TITLE$$")
-	authorPlaceholder := []byte("$$AUTHOR$$")
-	descriptionPlaceholder := []byte("$$DESCRIPTION$$")
 
-	// Default values.
-	defaultTitle := "Docs"
-	defaultDescription := "Documentation of an awesome project."
-	defaultAuthor := "Project Author"
+	if(len(os.Args) < 2) {
+		pp("You need to give a file name to convert to static site.")
+		return
+	}
 
+	// Read and parse the config file.
+	config := readConfig()
+	
 	// Define the available flags.
 	resultDirectoryName := flag.String("path", "result", "The path to export the resulting files.")
-	projectTitle := flag.String("title", defaultTitle, "Title of the documentation page.")
-	projectDescription := flag.String("description", defaultDescription, 
+	projectTitle := flag.String("title", config.Default.Title, "Title of the documentation page.")
+	projectDescription := flag.String("description", config.Default.Description, 
 		"Description of the project to place in the 'description' meta tag.")
-	projectAuthor := flag.String("author", defaultAuthor,
+	projectAuthor := flag.String("author", config.Default.Author,
 		"Author of the project to place in the 'author' meta tag.")
 	
 	flag.Parse()
@@ -51,19 +55,25 @@ func main() {
     template, err := ioutil.ReadFile("static/template.html")
 	check(err)
     
+    // Check if input file exists, and stop if not.
+	if _, err := os.Stat(os.Args[1]); os.IsNotExist(err) {
+	  pp("The file " + os.Args[1] + " does not exist.")
+	  return
+	}
+
     // Read the markdown file.
-    dat, err := ioutil.ReadFile("input.md")
+    dat, err := ioutil.ReadFile(os.Args[1])
     check(err)
 
     // Convert markdown to HTML and insert into the template.
 	html := blackfriday.MarkdownCommon(dat)
-	result := bytes.Replace(template, templatePlaceholder, html, -1)
+	result := bytes.Replace(template, []byte(config.Placeholder.Content), html, -1)
 
 	// Replace the placeholders with given values.
-	result = bytes.Replace(result, titlePlaceholder, []byte(*projectTitle), -1)
-	result = bytes.Replace(result, descriptionPlaceholder, []byte(*projectDescription), -1)
-	result = bytes.Replace(result, authorPlaceholder, []byte(*projectAuthor), -1)
-	
+	result = bytes.Replace(result, []byte(config.Placeholder.Title), []byte(*projectTitle), -1)
+	result = bytes.Replace(result, []byte(config.Placeholder.Description), []byte(*projectDescription), -1)
+	result = bytes.Replace(result, []byte(config.Placeholder.Author), []byte(*projectAuthor), -1)
+
 	// Remove if an existing folder exists.
 	if(exists(*resultDirectoryName)) {
 		os.RemoveAll(*resultDirectoryName)
@@ -80,6 +90,29 @@ func main() {
 
     pp("Documentation has been created successfully.\n" + 
     	"The sources can be found in '" + *resultDirectoryName + "' folder.")
+}
+
+func readConfig() (config Config) {
+	file, _ := os.Open("config.json")
+	decoder := json.NewDecoder(file)
+	err := decoder.Decode(&config)
+	if err != nil {
+	  fmt.Println("Error occured while reading config:", err)
+	}
+	return config
+}
+
+// Reading files requires checking most calls for errors.
+// This helper will streamline our error checks below.
+func check(e error) {
+    if e != nil {
+        panic(e)
+    }
+}
+
+// pp prints the given string, built to make code more readable.
+func pp(s string) {
+	fmt.Println(s)
 }
 
 // exists returns whether the given file or directory exists or not
