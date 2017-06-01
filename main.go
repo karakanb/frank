@@ -28,8 +28,23 @@ func main() {
 
 	// Config placeholders.
 	templatePlaceholder := []byte("$$CONTENT$$")
-	resultDirectoryName := flag.String("path", "result", "The path to export the resulting files.")
+	titlePlaceholder := []byte("$$TITLE$$")
+	authorPlaceholder := []byte("$$AUTHOR$$")
+	descriptionPlaceholder := []byte("$$DESCRIPTION$$")
 
+	// Default values.
+	defaultTitle := "Docs"
+	defaultDescription := "Documentation of an awesome project."
+	defaultAuthor := "Project Author"
+
+	// Define the available flags.
+	resultDirectoryName := flag.String("path", "result", "The path to export the resulting files.")
+	projectTitle := flag.String("title", defaultTitle, "Title of the documentation page.")
+	projectDescription := flag.String("description", defaultDescription, 
+		"Description of the project to place in the 'description' meta tag.")
+	projectAuthor := flag.String("author", defaultAuthor,
+		"Author of the project to place in the 'author' meta tag.")
+	
 	flag.Parse()
 
     // Read the template HTML file.
@@ -44,6 +59,11 @@ func main() {
 	html := blackfriday.MarkdownCommon(dat)
 	result := bytes.Replace(template, templatePlaceholder, html, -1)
 
+	// Replace the placeholders with given values.
+	result = bytes.Replace(result, titlePlaceholder, []byte(*projectTitle), -1)
+	result = bytes.Replace(result, descriptionPlaceholder, []byte(*projectDescription), -1)
+	result = bytes.Replace(result, authorPlaceholder, []byte(*projectAuthor), -1)
+	
 	// Remove if an existing folder exists.
 	if(exists(*resultDirectoryName)) {
 		os.RemoveAll(*resultDirectoryName)
