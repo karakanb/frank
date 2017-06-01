@@ -4,7 +4,11 @@ import (
 	"os"
 	"bytes"
     "io/ioutil"
+    "io"
+    "fmt"
+    "path/filepath"
 	"github.com/russross/blackfriday"
+	"flag"
 )
 
 // Reading files requires checking most calls for errors.
@@ -15,9 +19,18 @@ func check(e error) {
     }
 }
 
+// pp prints the given string, built to make code more readable.
+func pp(s string) {
+	fmt.Println(s)
+}
+
 func main() {
 
+	// Config placeholders.
 	templatePlaceholder := []byte("$$CONTENT$$")
+	resultDirectoryName := flag.String("path", "result", "The path to export the resulting files.")
+
+	flag.Parse()
 
     // Read the template HTML file.
     template, err := ioutil.ReadFile("static/template.html")
@@ -27,11 +40,135 @@ func main() {
     dat, err := ioutil.ReadFile("input.md")
     check(err)
 
+    // Convert markdown to HTML and insert into the template.
 	html := blackfriday.MarkdownCommon(dat)
 	result := bytes.Replace(template, templatePlaceholder, html, -1)
 
-	os.MkDir("result", 0644)
-	err = ioutil.WriteFile("index.html", result, 0644)
+	// Remove if an existing folder exists.
+	if(exists(*resultDirectoryName)) {
+		os.RemoveAll(*resultDirectoryName)
+	} 
+
+	// Create the result path and write HTML output to that path.
+	os.Mkdir(*resultDirectoryName, 0644)
+	err = ioutil.WriteFile(*resultDirectoryName + "/index.html", result, 0644)
     check(err)
 
+    // Copy the static files to the result folder.
+    copyDir("static/js", *resultDirectoryName +"/js")
+    copyDir("static/css", *resultDirectoryName + "/css")
+
+    pp("Documentation has been created successfully.\n" + 
+    	"The sources can be found in '" + *resultDirectoryName + "' folder.")
+}
+
+// exists returns whether the given file or directory exists or not
+func exists(path string) (bool) {
+    found, err := os.Stat(path)
+    if (err == nil && found.IsDir()) {
+    	return true 
+    }
+    return false
+}
+
+// copyFile copies the contents of the file named src to the file named by dst. 
+// The file will be created if it does not already exist. If the
+// destination file exists, all it's contents will be replaced by the contents
+// of the source file. The file mode will be copied from the source and
+// the copied data is synced/flushed to stable storage.
+func copyFile(src, dst string) (err error) {
+	in, err := os.Open(src)
+	if err != nil {
+		return
+	}
+	defer in.Close()
+
+	out, err := os.Create(dst)
+	if err != nil {
+		return
+	}
+	defer func() {
+		if e := out.Close(); e != nil {
+			err = e
+		}
+	}()
+
+	_, err = io.Copy(out, in)
+	if err != nil {
+		return
+	}
+
+	err = out.Sync()
+	if err != nil {
+		return
+	}
+
+	si, err := os.Stat(src)
+	if err != nil {
+		return
+	}
+	err = os.Chmod(dst, si.Mode())
+	if err != nil {
+		return
+	}
+
+	return
+}
+
+// copyDir recursively copies a directory tree, attempting to preserve permissions.
+// Source directory must exist, destination directory must *not* exist.
+// Symlinks are ignored and skipped.
+func copyDir(src string, dst string) (err error) {
+	src = filepath.Clean(src)
+	dst = filepath.Clean(dst)
+
+	si, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
+	if !si.IsDir() {
+		return fmt.Errorf("Given source is not a directory")
+	}
+
+	_, err = os.Stat(dst)
+	if err != nil && !os.IsNotExist(err) {
+		return
+	}
+	if err == nil {
+		return fmt.Errorf("Destination already exists")
+	}
+
+	err = os.MkdirAll(dst, si.Mode())
+	if err != nil {
+		return
+	}
+
+	entries, err := ioutil.ReadDir(src)
+	if err != nil {
+		return
+	}
+
+	for _, entry := range entries {
+		srcPath := filepath.Join(src, entry.Name())
+		dstPath := filepath.Join(dst, entry.Name())
+
+		if entry.IsDir() {
+			err = copyDir(srcPath, dstPath)
+			if err != nil {
+				return
+			}
+		} else {
+			// Skip symlinks.
+			if entry.Mode()&os.ModeSymlink != 0 {
+				continue
+			}
+
+			err = copyFile(srcPath, dstPath)
+			if err != nil {
+				return
+			}
+		}
+	}
+
+	return
 }
