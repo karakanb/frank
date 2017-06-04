@@ -92,8 +92,9 @@ func main() {
     	"The sources can be found in '" + *resultDirectoryName + "' folder.")
 }
 
+// readConfig reads the config file from the static folder to 
 func readConfig() (config Config) {
-	file, _ := os.Open("config.json")
+	file, _ := os.Open("static/config.json")
 	decoder := json.NewDecoder(file)
 	err := decoder.Decode(&config)
 	if err != nil {
