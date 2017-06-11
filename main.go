@@ -13,9 +13,10 @@ import (
 )
 
 type DefaultValues struct {
+	Path string
 	Title string
-	Description string
 	Author string
+	Description string
 }
 
 type Placeholders struct {
@@ -28,6 +29,7 @@ type Placeholders struct {
 type Config struct {
 	Placeholder Placeholders
 	Default DefaultValues
+	HelpText DefaultValues
 }
 
 func main() {
@@ -42,14 +44,16 @@ func main() {
 	config := readConfig()
 	
 	// Define the available flags.
-	resultDirectoryName := flag.String("path", "result", "The path to export the resulting files.")
-	projectTitle := flag.String("title", config.Default.Title, "Title of the documentation page.")
-	projectDescription := flag.String("description", config.Default.Description, 
-		"Description of the project to place in the 'description' meta tag.")
-	projectAuthor := flag.String("author", config.Default.Author,
-		"Author of the project to place in the 'author' meta tag.")
-	
+	resultDirectoryName := flag.String("path", config.Default.Path, config.HelpText.Path)
+	projectTitle 		:= flag.String("title", config.Default.Title, config.HelpText.Title)
+	projectAuthor 		:= flag.String("author", config.Default.Author, config.HelpText.Author)
+	projectDescription 	:= flag.String("description", config.Default.Description, 
+		config.HelpText.Description)
+
 	flag.Parse()
+	
+	fmt.Println(*projectDescription)
+	return
 
     // Read the template HTML file.
     template, err := ioutil.ReadFile("static/template.html")
@@ -98,7 +102,7 @@ func readConfig() (config Config) {
 	decoder := json.NewDecoder(file)
 	err := decoder.Decode(&config)
 	if err != nil {
-	  fmt.Println("Error occured while reading config:", err)
+	  fmt.Println("Error occured while reading the config file:", err)
 	}
 	return config
 }

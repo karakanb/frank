@@ -6,8 +6,15 @@
 		"description": "$$DESCRIPTION$$"
 	},
 	"default": {
+		"path": "result",
 		"title": "Docs",
-		"description": "Documentation of an awesome project.",
-		"author": "Project Author"
+		"author": "Project Author",
+		"description": "Documentation of an awesome project."
+	},
+	"helpText": {
+		"path": "The path to export the resulting files.",
+		"title": "Title of the documentation page.",
+		"author": "Author of the project to place in the 'author' meta tag.",
+		"description": "Description of the project to place in the 'description' meta tag."
 	}
 }
