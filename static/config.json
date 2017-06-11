@@ -6,12 +6,14 @@
 		"description": "$$DESCRIPTION$$"
 	},
 	"default": {
+		"input": "$$INPUT$$",
 		"path": "result",
 		"title": "Docs",
 		"author": "Project Author",
 		"description": "Documentation of an awesome project."
 	},
 	"helpText": {
+		"input": "The input Markdown file to be processed.",
 		"path": "The path to export the resulting files.",
 		"title": "Title of the documentation page.",
 		"author": "Author of the project to place in the 'author' meta tag.",

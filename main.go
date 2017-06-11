@@ -12,7 +12,10 @@ import (
 	"flag"
 )
 
+const FILE_NOT_GIVEN = "You need to give a file name to convert to static site."
+
 type DefaultValues struct {
+	Input string
 	Path string
 	Title string
 	Author string
@@ -34,16 +37,11 @@ type Config struct {
 
 func main() {
 
-
-	if(len(os.Args) < 2) {
-		pp("You need to give a file name to convert to static site.")
-		return
-	}
-
 	// Read and parse the config file.
 	config := readConfig()
 	
 	// Define the available flags.
+	inputFile 			:= flag.String("input", config.Default.Input, config.HelpText.Input)
 	resultDirectoryName := flag.String("path", config.Default.Path, config.HelpText.Path)
 	projectTitle 		:= flag.String("title", config.Default.Title, config.HelpText.Title)
 	projectAuthor 		:= flag.String("author", config.Default.Author, config.HelpText.Author)
@@ -51,22 +49,24 @@ func main() {
 		config.HelpText.Description)
 
 	flag.Parse()
-	
-	fmt.Println(*projectDescription)
-	return
 
-    // Read the template HTML file.
-    template, err := ioutil.ReadFile("static/template.html")
-	check(err)
-    
+	if *inputFile == config.Default.Input {
+		pp(FILE_NOT_GIVEN)
+		return
+	}
+	
     // Check if input file exists, and stop if not.
-	if _, err := os.Stat(os.Args[1]); os.IsNotExist(err) {
-	  pp("The file " + os.Args[1] + " does not exist.")
+	if _, err := os.Stat(*inputFile); os.IsNotExist(err) {
+	  pp("The file " + *inputFile + " does not exist.")
 	  return
 	}
 
+	// Read the template HTML file.
+    template, err := ioutil.ReadFile("static/template.html")
+	check(err)
+
     // Read the markdown file.
-    dat, err := ioutil.ReadFile(os.Args[1])
+    dat, err := ioutil.ReadFile(*inputFile)
     check(err)
 
     // Convert markdown to HTML and insert into the template.
