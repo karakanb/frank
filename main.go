@@ -80,7 +80,7 @@ func main() {
 		[]byte(*projectDescription), -1)
 
 	// Remove if an existing folder exists.
-	if exists(*resultDirectoryName) {
+	if dirExists(*resultDirectoryName) {
 		os.RemoveAll(*resultDirectoryName)
 	}
 
@@ -125,26 +125,4 @@ func readConfig() (config Config) {
 		fmt.Println("Error occured while reading the config file:", err)
 	}
 	return config
-}
-
-// Reading files requires checking most calls for errors.
-// This helper will streamline our error checks below.
-func check(e error) {
-	if e != nil {
-		panic(e)
-	}
-}
-
-// pp prints the given string, built to make code more readable.
-func pp(s string) {
-	fmt.Println(s)
-}
-
-// exists returns whether the given file or directory exists or not
-func exists(path string) bool {
-	found, err := os.Stat(path)
-	if err == nil && found.IsDir() {
-		return true
-	}
-	return false
 }
