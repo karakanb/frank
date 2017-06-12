@@ -101,20 +101,13 @@ func generateOutputFiles(directoryPath string, data []byte) {
 	check(err)
 
 	// Copy the asset files to the location.
-	file, _ := Asset("css/default.min.css")
-	os.Create(directoryPath + "/css/default.min.css")
-	err = ioutil.WriteFile(directoryPath+"/css/default.min.css", file, 0644)
-	check(err)
-
-	file, _ = Asset("css/doc.css")
-	os.Create(directoryPath + "/css/doc.css")
-	err = ioutil.WriteFile(directoryPath+"/css/doc.css", file, 0644)
-	check(err)
-
-	file, _ = Asset("js/highlight.js")
-	os.Create(directoryPath + "/js/highlight.js")
-	err = ioutil.WriteFile(directoryPath+"/js/highlight.js", file, 0644)
-	check(err)
+	fileNames := [...]string{"css/default.min.css", "css/doc.css", "js/highlight.js"}
+	for _, path := range fileNames {
+		file, _ := Asset(path)
+		os.Create(directoryPath + "/" + path)
+		err = ioutil.WriteFile(directoryPath+"/"+path, file, 0644)
+		check(err)
+	}
 }
 
 // readConfig reads the config file from the static folder to a Config object.
