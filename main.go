@@ -48,13 +48,14 @@ func main() {
 
 	flag.Parse()
 
+	// Check if input file is given as a parameter.
 	if *inputFile == config.Default.Input {
 		pp(FILE_NOT_GIVEN)
 		return
 	}
 
 	// Check if input file exists, and stop if not.
-	if _, err := os.Stat(*inputFile); os.IsNotExist(err) {
+	if !fileExists(*inputFile) {
 		pp("The file " + *inputFile + " does not exist.")
 		return
 	}

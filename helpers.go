@@ -30,6 +30,13 @@ func dirExists(path string) bool {
 	return false
 }
 
+func fileExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
 // readConfig reads the config file from the static folder to a Config object.
 func readConfig() (config Config) {
 	configJson, _ := Asset("config.json")
