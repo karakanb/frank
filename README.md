@@ -4,15 +4,19 @@ Frank is a simple static site generator based on Markdown, with basic documentat
 
 ## Usage
 
-Currently, you need to clone the library and build it. In order to build it, you must have Go installed as well.
+Currently, you need to clone the library and build it. In order to build it, you must have Go and Dep installed as well.
 ```bash
+
 # Clone the repository.
-git clone git@github.com:karakanb/frank.git
+git clone https://github.com/karakanb/frank.git
+
+# Install the dependencies using dep.
+cd frank
+dep ensure
 
 # Build the source.
-cd frank
-go build main.go
+go build
 
 # Run the program by giving the markdown path.
-./frank input.md
+./frank --input input.md
 ```
