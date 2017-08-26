@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"encoding/json"
+	"io/ioutil"
+
 )
 
 const CONFIG_READ_ERROR = "Error occured while reading the config file: "
@@ -45,4 +47,11 @@ func readConfig() (config Config) {
 		fmt.Println(CONFIG_READ_ERROR, err)
 	}
 	return config
+}
+
+func copyFile(directoryPath string, filePath string){
+	file, _ := Asset(filePath)
+	os.Create(directoryPath + "/" + filePath)
+	err := ioutil.WriteFile(directoryPath + "/" + filePath, file, 0755)
+	check(err)
 }
