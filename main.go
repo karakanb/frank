@@ -2,9 +2,7 @@ package main
 
 import (
 	"bytes"
-	"encoding/json"
 	"flag"
-	"fmt"
 	"github.com/russross/blackfriday"
 	"io/ioutil"
 	"os"
@@ -108,14 +106,4 @@ func generateOutputFiles(directoryPath string, data []byte) {
 		err = ioutil.WriteFile(directoryPath+"/"+path, file, 0755)
 		check(err)
 	}
-}
-
-// readConfig reads the config file from the static folder to a Config object.
-func readConfig() (config Config) {
-	configJson, _ := Asset("config.json")
-	err := json.Unmarshal(configJson, &config)
-	if err != nil {
-		fmt.Println("Error occured while reading the config file:", err)
-	}
-	return config
 }
