@@ -6,7 +6,7 @@
 		"description": "$$DESCRIPTION$$"
 	},
 	"default": {
-		"input": "$$INPUT$$",
+		"input": "README.md",
 		"path": "result",
 		"title": "Docs",
 		"author": "Project Author",

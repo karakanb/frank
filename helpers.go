@@ -19,11 +19,16 @@ func check(e error) {
 }
 
 // pp prints the given string, built to make code more readable.
-func pp(s string) {
+func pp(s interface{}) {
 	fmt.Println(s)
 }
 
-// exists returns whether the given file or directory exists or not
+// remove removes an element from a given array.
+func remove(slice []string, s int) []string {
+    return append(slice[:s], slice[s+1:]...)
+}
+
+// dirExists returns whether the given file or directory exists or not
 func dirExists(path string) bool {
 	found, err := os.Stat(path)
 	if err == nil && found.IsDir() {
@@ -32,6 +37,7 @@ func dirExists(path string) bool {
 	return false
 }
 
+// fileExists returns whether the given file exists or not
 func fileExists(path string) bool {
 	if _, err := os.Stat(path); os.IsNotExist(err) {
 		return false

@@ -4,7 +4,31 @@ Frank is a simple static site generator based on Markdown, with basic documentat
 
 ## Usage
 
-Currently, you need to clone the library and build it. In order to build it, you must have Go and Dep installed as well.
+In order to start using it directly, you can use `go get` to get the tool:
+```bash
+# Get the library and install it.
+go get github.com/karakanb/frank
+
+# Use it with any input file, resulting static files will be in result/ folder.
+frank -input inputMarkdown.md
+```
+
+### Available Flags
+
+Keep in mind that, all of these flags are optional and the defaults will be used with no arguments given.
+
+| Flag         | Default                                | Description                                                        |
+|--------------|----------------------------------------|--------------------------------------------------------------------|
+| -input       | "README.md"                            | The input Markdown file to be processed.                           |
+| -path        | result                                 | Indicates the output path. The default is `result`folder.          |
+| -title       | "Docs"                                 | Title of the documentation page.                                   |
+| -author      | "Project Author"                       | Author of the project to place in the 'author' meta tag.           |
+| -description | "Documentation of an awesome project." | Description of the project to place in the 'description' meta tag. |
+
+## Contributing
+
+Frank uses dep to manage its dependencies. Even though it has a very simple dependency tree, I found it best to use a dependency management tool. Therefore, after cloning, you need to `dep ensure` to get the missing dependencies. Also, Frank uses (go-bindata)[https://github.com/jteeuwen/go-bindata] for embedding the static assets to the singular binary, which means that in order to start developing, you need to have `go-bindata` executable in your `$GOPATH/bin`.
+
 ```bash
 
 # Clone the repository.
@@ -14,9 +38,12 @@ git clone https://github.com/karakanb/frank.git
 cd frank
 dep ensure
 
+# Generate the embedded assets for the binary file.
+go generate
+
 # Build the source.
 go build
 
-# Run the program by giving the markdown path.
-./frank --input input.md
+# Run the program by giving the input markdown path.
+./frank -input input.md
 ```
