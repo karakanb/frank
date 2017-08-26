@@ -94,10 +94,10 @@ func main() {
 func generateOutputFiles(directoryPath string, data []byte) {
 
 	// Create the result path and write HTML output to that path.
-	os.Mkdir(directoryPath, 0644)
-	os.Mkdir(directoryPath+"/css/", 0644)
-	os.Mkdir(directoryPath+"/js/", 0644)
-	err := ioutil.WriteFile(directoryPath+"/index.html", data, 0644)
+	os.Mkdir(directoryPath, 0755)
+	os.Mkdir(directoryPath+"/css/", 0755)
+	os.Mkdir(directoryPath+"/js/", 0755)
+	err := ioutil.WriteFile(directoryPath+"/index.html", data, 0755)
 	check(err)
 
 	// Copy the asset files to the location.
@@ -105,7 +105,7 @@ func generateOutputFiles(directoryPath string, data []byte) {
 	for _, path := range fileNames {
 		file, _ := Asset(path)
 		os.Create(directoryPath + "/" + path)
-		err = ioutil.WriteFile(directoryPath+"/"+path, file, 0644)
+		err = ioutil.WriteFile(directoryPath+"/"+path, file, 0755)
 		check(err)
 	}
 }

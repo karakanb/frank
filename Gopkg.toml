@@ -1,0 +1,5 @@
+required = ["github.com/russross/blackfriday"]
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/russross/blackfriday"
