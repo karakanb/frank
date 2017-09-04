@@ -12,7 +12,7 @@
 		"author": "Project Author",
 		"description": "Documentation of an awesome project."
 	},
-	"helpText": {
+	"help": {
 		"input": "The input Markdown file to be processed.",
 		"path": "The path to export the resulting files.",
 		"title": "Title of the documentation page.",

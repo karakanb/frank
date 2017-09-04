@@ -30,7 +30,7 @@ type Placeholders struct {
 type Config struct {
 	Placeholder Placeholders
 	Default     DefaultValues
-	HelpText    DefaultValues
+	Help    DefaultValues
 }
 
 func main() {
@@ -39,12 +39,12 @@ func main() {
 	config := readConfig()
 
 	// Define the available flags.
-	inputFile := flag.String("input", config.Default.Input, config.HelpText.Input)
-	resultDirectoryName := flag.String("path", config.Default.Path, config.HelpText.Path)
-	projectTitle := flag.String("title", config.Default.Title, config.HelpText.Title)
-	projectAuthor := flag.String("author", config.Default.Author, config.HelpText.Author)
+	inputFile := flag.String("input", config.Default.Input, config.Help.Input)
+	resultDirectoryName := flag.String("path", config.Default.Path, config.Help.Path)
+	projectTitle := flag.String("title", config.Default.Title, config.Help.Title)
+	projectAuthor := flag.String("author", config.Default.Author, config.Help.Author)
 	projectDescription := flag.String("description", config.Default.Description,
-		config.HelpText.Description)
+		config.Help.Description)
 
 	flag.Parse()
 
