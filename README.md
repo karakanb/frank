@@ -51,7 +51,7 @@ Usage of ./frank:
 
 Frank uses dep to manage its dependencies. Even though it has a very simple dependency tree, I found it best to use a dependency management tool. Therefore, after cloning, you need to `dep ensure` to get the missing dependencies. Also, Frank uses (go-bindata)[https://github.com/jteeuwen/go-bindata] for embedding the static assets to the singular binary, which means that in order to start developing, you need to have `go-bindata` executable in your `$GOPATH/bin`.
 
-```bash
+```sh
 
 # Clone the repository.
 git clone https://github.com/karakanb/frank.git
