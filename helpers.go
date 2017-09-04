@@ -1,11 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"os"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
+	"os"
 
+	"github.com/fatih/color"
 )
 
 const CONFIG_READ_ERROR = "Error occured while reading the config file: "
@@ -25,7 +26,7 @@ func pp(s interface{}) {
 
 // remove removes an element from a given array.
 func remove(slice []string, s int) []string {
-    return append(slice[:s], slice[s+1:]...)
+	return append(slice[:s], slice[s+1:]...)
 }
 
 // dirExists returns whether the given file or directory exists or not
@@ -50,14 +51,28 @@ func readConfig() (config Config) {
 	configJson, _ := Asset("config.json")
 	err := json.Unmarshal(configJson, &config)
 	if err != nil {
-		fmt.Println(CONFIG_READ_ERROR, err)
+		printError(CONFIG_READ_ERROR + err.Error())
 	}
 	return config
 }
 
-func copyFile(directoryPath string, filePath string){
+func copyFile(directoryPath string, filePath string) {
 	file, _ := Asset(filePath)
 	os.Create(directoryPath + "/" + filePath)
-	err := ioutil.WriteFile(directoryPath + "/" + filePath, file, 0755)
+	err := ioutil.WriteFile(directoryPath+"/"+filePath, file, 0755)
 	check(err)
+}
+
+func printSuccess(s string) {
+	color.Green(wrapStars(s))
+}
+
+func printError(s string) {
+	color.Red(wrapStars(s))
+}
+
+func wrapStars(s string) string {
+	stars := "\n************************************************************\n"
+	s = stars + "\n" + s + "\n" + stars
+	return s
 }

@@ -51,7 +51,7 @@ func main() {
 
 	// Check if input file exists, and stop if not.
 	if !fileExists(*inputFile) {
-		pp("The file " + *inputFile + " does not exist.")
+		printError("The file '" + *inputFile + "' does not exist.")
 		return
 	}
 
@@ -80,8 +80,8 @@ func main() {
 
 	generateOutputFiles(*resultDirectoryName, result)
 
-	pp("Documentation has been created successfully.\n" +
-		"The sources can be found in '" + *resultDirectoryName + "' folder.")
+	printSuccess("Documentation has been created successfully.\n" +
+		"Generated source files can be found in '" + *resultDirectoryName + "' folder.")
 }
 
 // generateOutputFiles copies the required asset files to the specified location.
