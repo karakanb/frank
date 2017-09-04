@@ -94,7 +94,7 @@ func generateOutputFiles(directoryPath string, data []byte) {
 	check(err)
 
 	// Copy the asset files to the location.
-	fileNames := [...]string{"css/default.min.css", "css/doc.css", "js/highlight.js"}
+	fileNames := [...]string{"css/docs.css"}
 	for _, filePath := range fileNames {
 		copyFile(directoryPath, filePath)
 	}

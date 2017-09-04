@@ -1,0 +1,10 @@
+.container {
+    margin-top: 48px;
+}
+
+.default .container h1:first-of-type {
+    text-align: center;
+    font-weight: 700;
+    font-size: 8rem;
+    color: #464646;
+}
