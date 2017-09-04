@@ -9,7 +9,7 @@ In order to start using it directly, you can use `go get` to get the tool:
 # Get the library and install it.
 go get github.com/karakanb/frank
 
-# Create static site from README.md file. Resulting static files will be in result/ folder.
+# Create the static site from README.md file. Resulting static files will be in docs/ folder.
 frank
 ```
 
@@ -17,13 +17,13 @@ frank
 
 Keep in mind that, all of these flags are optional and the defaults will be used with no arguments given.
 
-| Flag         | Default                                | Description                                                        |
-|--------------|----------------------------------------|--------------------------------------------------------------------|
-| input       | "README.md"                            | The input Markdown file to be processed.                           |
-| path        | "result"                                 | Indicates the output path. The default is `result`folder.          |
-| title       | "Docs"                                 | Title of the documentation page.                                   |
-| author      | "Project Author"                       | Author of the project to place in the 'author' meta tag.           |
-| description | "Documentation of an awesome project." | Description of the project to place in the 'description' meta tag. |
+| Flag         | Default                                | Description                                                       |
+|--------------|----------------------------------------|-------------------------------------------------------------------|
+| input       | `README.md`                            | The input Markdown file to be processed.                           |
+| path        | `docs`                                 | Output path to generate the files.                                 |
+| title       | `Docs`                                 | Title of the documentation page.                                   |
+| author      | `Project Author`                       | Author of the project to place in the `author` meta tag.           |
+| description | `Documentation of an awesome project.` | Description of the project to place in the `description` meta tag. |
 
 An example usage with all the flags set would be as follows:
 ```bash
@@ -42,7 +42,7 @@ Usage of ./frank:
   -input string
     	The input Markdown file to be processed. (default "README.md")
   -path string
-    	The path to export the resulting files. (default "result")
+    	The path to export the resulting files. (default "docs")
   -title string
     	Title of the documentation page. (default "Docs")
 ```
