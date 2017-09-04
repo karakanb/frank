@@ -3,9 +3,10 @@ package main
 import (
 	"bytes"
 	"flag"
-	"github.com/russross/blackfriday"
 	"io/ioutil"
 	"os"
+
+	"github.com/russross/blackfriday"
 )
 
 //go:generate go-bindata -prefix "static/" -pkg main -o bindata.go static/...
@@ -30,7 +31,7 @@ type Placeholders struct {
 type Config struct {
 	Placeholder Placeholders
 	Default     DefaultValues
-	Help    DefaultValues
+	Help        DefaultValues
 }
 
 func main() {

@@ -15,6 +15,7 @@
 .glide/
 
 result/
+docs/
 vendor/
 frank
 .DS_Store
